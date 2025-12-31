@@ -15,7 +15,7 @@ final readonly class EnsureMigrationsTablesExists
         $this->db = Database::connect();
     }
 
-    public function __invoke(): void
+    public function execute(): void
     {
         $this->migrationsTable();
         $this->repeatableMigrationsTable();

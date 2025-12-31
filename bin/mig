@@ -3,12 +3,20 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
+use Mig\Actions\EnsureMigrationsDirectoriesExists;
+use Mig\Actions\EnsureMigrationsTablesExists;
 use Mig\Commands\CreateMigrationCommand;
+use Mig\Commands\MigrateCommand;
 use Symfony\Component\Console\Application;
+
+new EnsureMigrationsDirectoriesExists()->execute();
+new EnsureMigrationsTablesExists()->execute();
 
 $application = new Application();
 
-// ... register commands
-$application->addCommand(new CreateMigrationCommand("migrations"));
+$application->addCommands([
+    new CreateMigrationCommand(),
+    new MigrateCommand(),
+]);
 
 $application->run();

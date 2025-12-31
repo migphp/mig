@@ -11,16 +11,24 @@ final readonly class RunMigration
     private Database $db;
 
     public function __construct(
-        private string $fileName,
     ) {
-        //
+        $this->db = Database::connect();
     }
 
-    public function __invoke(): string
+    /**
+     * @return array{0:bool, 1:string}
+     */
+    public function execute(
+        string $filePath,
+    ): array
     {
-        $sql = file_get_contents($this->fileName);
+        $sql = file_get_contents($filePath);
         if ($sql === false) {
-            return 'fail to read file '.$this->fileName;
+            return [false, "fail to read file $filePath"];
+        }
+
+        if (trim($sql) === '') {
+            return [false, '🤨 Empty migration, skipping.'];
         }
 
         $result = $this->db->pdo()->exec($sql);
@@ -28,17 +36,9 @@ final readonly class RunMigration
         if ($result === false) {
             // TODO: fix this ugliness
             var_dump($this->db->pdo()->errorInfo());
-            return 'error: ';
+            return [false, 'error: '];
         }
 
-        $this->insertRunnedMigration($this->fileName);
-
-        return 'success';
-    }
-
-    private function insertRunnedMigration(string $fileName): void
-    {
-        $statement = $this->db->pdo()->prepare('insert into mig_migrations (migration) values (?);');
-        $statement->execute([$fileName]);
+        return [true, 'success'];
     }
 }

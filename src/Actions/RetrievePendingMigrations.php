@@ -4,13 +4,37 @@ declare(strict_types=1);
 
 namespace Mig\Actions;
 
+use Mig\Support\Config;
+use Mig\Support\Database;
+
 final readonly class RetrievePendingMigrations
 {
+    public function __construct(
+        private Database $db,
+    ) {
+        //
+    }
+
     /**
      * @return string[]
      */
-    public function __invoke(): array
+    public function execute(): array
     {
-        return [];
+        $migrationsPath = Config::migrationsDirectoryPath();
+        $allFiles = glob($migrationsPath.'/*.sql');
+        $fileNames = array_map(fn($file) => basename($file), $allFiles);
+
+        if ($allFiles === false || $allFiles === []) {
+            return [];
+        }
+
+        $statement = $this->db->pdo()->prepare('select migration from mig_migrations');
+        $statement->execute();
+        $result = $statement->fetchAll();
+
+        $alreadyMigratedList = array_column($result, 'migration');
+        $pendingMigrations = array_diff($fileNames, $alreadyMigratedList);
+
+        return $pendingMigrations;
     }
 }
