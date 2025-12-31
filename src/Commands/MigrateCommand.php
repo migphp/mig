@@ -4,8 +4,10 @@ namespace Mig\Commands;
 
 use Mig\Actions\EnsureMigrationsTablesExists;
 use Mig\Actions\RetrievePendingMigrations;
+use Mig\Actions\RetrievePendingRepeatableMigrations;
 use Mig\Actions\RunMigration;
 use Mig\Actions\StoreMigrationExecuted;
+use Mig\Actions\StoreRepeatableMigrationExecuted;
 use Mig\Support\Config;
 use Mig\Support\Database;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -26,7 +28,9 @@ class MigrateCommand
     public function __invoke(InputInterface $i, OutputInterface $o): int
     {
         $this->runMigrations($o);
-        $this->runRepeatableMigrations();
+        $this->runRepeatableMigrations($o);
+
+        $o->writeln('🥱 Done, no more migrations to run.');
 
         return Command::SUCCESS;
     }
@@ -53,11 +57,31 @@ class MigrateCommand
 
             $o->writeln($info);
         }
-
-        $o->writeln('🥱 Done, no more migrations to run.');
     }
 
-    private function runRepeatableMigrations(): void
+    private function runRepeatableMigrations(OutputInterface $o): void
     {
+        $storeMigration = new StoreRepeatableMigrationExecuted();
+        $pendingMigrations = new RetrievePendingRepeatableMigrations($this->db)->execute();
+
+        if (count($pendingMigrations) === 0) {
+            $o->writeln("☑️ No pending repeatable migrations...");
+
+        }
+
+        foreach ($pendingMigrations as $migrationName) {
+
+            $o->writeln("Running repeatable migration $migrationName");
+
+            $migrationPath = sprintf("%s/%s", Config::repeatableMigrationsDirectoryPath(), $migrationName);
+
+            [$success, $info] = new RunMigration()->execute($migrationPath);
+
+            if ($success) {
+                $storeMigration->execute($migrationName);
+            }
+
+            $o->writeln($info);
+        }
     }
 }

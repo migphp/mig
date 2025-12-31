@@ -41,7 +41,7 @@ SQL
             <<<SQL
             create table IF not exists mig_repeatable_migrations (
                 id bigint generated always as identity primary key,
-                migration varchar(304) not null,
+                migration varchar(304) not null unique,
                 checksum varchar(64) not null,
                 executed_at timestamp with time zone default current_timestamp
             )
