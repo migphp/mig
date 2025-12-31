@@ -28,8 +28,18 @@ readonly class CreateMigrationCommand
         $o->writeln('📜 Creating a migration');
 
         $fileName = $this->getFileName($this->askForDescription($io));
+        $isRepeatable = $this->askIfRepeatable($io);
 
-        $filePath = "{$this->dirPath}/{$fileName}";
+        if (strlen($fileName) > 304) {
+            $o->writeln('Your migration name is too long. Must be less than 300 characters.');
+
+            return Command::INVALID;
+        }
+
+        $filePath = match ($isRepeatable) {
+            false => sprintf("%s/%s_%s", $this->dirPath, $this->generatePrefix(), $fileName),
+            true => sprintf("%s/repeatable/%s", $this->dirPath, $fileName),
+        };
 
         touch($filePath);
 
@@ -48,7 +58,7 @@ readonly class CreateMigrationCommand
     {
         $name = str_replace(' ', '_', strtolower($description));
 
-        return $this->generatePrefix().'_'.$name.'.sql';
+        return $name.'.sql';
     }
 
 
@@ -65,5 +75,15 @@ readonly class CreateMigrationCommand
         if (!is_dir($this->dirPath)) {
             mkdir($this->dirPath, 0777, true);
         }
+
+        $repeatablePath = $this->dirPath.'/repeatable';
+        if (!is_dir($repeatablePath)) {
+            mkdir($repeatablePath, 0777, true);
+        }
+    }
+
+    private function askIfRepeatable(SymfonyStyle $io): bool
+    {
+        return $io->confirm('Is this migration repeatable? Can it be run multiple times?', false);
     }
 }

@@ -7,5 +7,7 @@
 /vendor/
 /.idea/
 /migrations/
+/postgresql/
+/pagila/
 *.swp
 *.swo
