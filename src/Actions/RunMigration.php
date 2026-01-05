@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mig\Actions;
 
-use Mig\Support\Database;
+use Mig\Database;
 
 final readonly class RunMigration
 {

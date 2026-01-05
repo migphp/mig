@@ -8,7 +8,7 @@ use Mig\Actions\RunMigration;
 use Mig\Actions\StoreMigrationExecuted;
 use Mig\Actions\StoreRepeatableMigrationExecuted;
 use Mig\Config;
-use Mig\Support\Database;
+use Mig\Database;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

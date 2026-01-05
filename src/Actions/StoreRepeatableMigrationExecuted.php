@@ -2,7 +2,7 @@
 
 namespace Mig\Actions;
 
-use Mig\Support\Database;
+use Mig\Database;
 
 final readonly class StoreRepeatableMigrationExecuted
 {
