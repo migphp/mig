@@ -15,7 +15,8 @@
     ],
     "require": {
         "php": "^8.4.0",
-        "symfony/console": "^7.4"
+        "symfony/console": "^7.4",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "laravel/pint": "^1.24.0",

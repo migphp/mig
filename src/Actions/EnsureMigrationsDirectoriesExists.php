@@ -2,14 +2,16 @@
 
 namespace Mig\Actions;
 
-use Mig\Support\Config;
+use Mig\Config;
 
 class EnsureMigrationsDirectoriesExists
 {
     public function execute(): void
     {
-        $this->ensureDirectoryExists(Config::migrationsDirectoryPath());
-        $this->ensureDirectoryExists(Config::repeatableMigrationsDirectoryPath());
+        $config = Config::instance();
+
+        $this->ensureDirectoryExists($config->migrationsDirPath);
+        $this->ensureDirectoryExists($config->repeatableMigrationsDirPath);
     }
 
     private function ensureDirectoryExists(string $path): void

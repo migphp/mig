@@ -3,7 +3,7 @@
 namespace Mig\Commands;
 
 use DateTime;
-use Mig\Support\Config;
+use Mig\Config;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,9 +32,11 @@ readonly class CreateMigrationCommand
             return Command::INVALID;
         }
 
+        $config = Config::instance();
+
         $filePath = match ($isRepeatable) {
-            false => sprintf("%s/%s_%s", Config::migrationsDirectoryPath(), $this->generatePrefix(), $fileName),
-            true => sprintf("%s/%s", Config::repeatableMigrationsDirectoryPath(), $fileName),
+            false => sprintf("%s/%s_%s", $config->migrationsDirPath, $this->generatePrefix(), $fileName),
+            true => sprintf("%s/%s", $config->repeatableMigrationsDirPath, $fileName),
         };
 
         touch($filePath);

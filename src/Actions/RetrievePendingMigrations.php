@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mig\Actions;
 
-use Mig\Support\Config;
+use Mig\Config;
 use Mig\Support\Database;
 
 final readonly class RetrievePendingMigrations
@@ -20,7 +20,7 @@ final readonly class RetrievePendingMigrations
      */
     public function execute(): array
     {
-        $migrationsPath = Config::migrationsDirectoryPath();
+        $migrationsPath = Config::instance()->migrationsDirPath;
         $allFiles = glob($migrationsPath.'/*.sql');
         $fileNames = array_map(fn($file) => basename($file), $allFiles);
 
@@ -28,7 +28,7 @@ final readonly class RetrievePendingMigrations
             return [];
         }
 
-        $statement = $this->db->pdo()->prepare('select migration from mig_migrations');
+        $statement = $this->db->pdo->prepare('select migration from mig_migrations');
         $statement->execute();
         $result = $statement->fetchAll();
 

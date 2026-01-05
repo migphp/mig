@@ -10,12 +10,12 @@ final readonly class StoreMigrationExecuted
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        $this->db = Database::instance();
     }
 
     public function execute(string $fileName): void
     {
-        $statement = $this->db->pdo()->prepare('insert into mig_migrations (migration) values (?);');
+        $statement = $this->db->pdo->prepare('insert into mig_migrations (migration) values (?);');
         $statement->execute([$fileName]);
     }
 }

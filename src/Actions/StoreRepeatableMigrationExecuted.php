@@ -2,7 +2,6 @@
 
 namespace Mig\Actions;
 
-use Mig\Support\Config;
 use Mig\Support\Database;
 
 final readonly class StoreRepeatableMigrationExecuted
@@ -11,13 +10,13 @@ final readonly class StoreRepeatableMigrationExecuted
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        $this->db = Database::instance();
     }
 
     public function execute(string $fileName): void
     {
         $checksum = new CalculateRepeatableMigrationChecksum()->execute($fileName);
-        $statement = $this->db->pdo()->prepare(<<<SQL
+        $statement = $this->db->pdo->prepare(<<<SQL
             insert into mig_repeatable_migrations (migration, checksum) values (?, ?)
             on conflict (migration) do update set checksum = ?;
 SQL

@@ -12,7 +12,7 @@ final readonly class EnsureMigrationsTablesExists
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        $this->db = Database::instance();
     }
 
     public function execute(): void
@@ -23,9 +23,9 @@ final readonly class EnsureMigrationsTablesExists
 
     private function migrationsTable(): void
     {
-        $statement = $this->db->pdo()->prepare(
+        $statement = $this->db->pdo->prepare(
             <<<SQL
-                create table IF not exists mig_migrations (
+                create table if not exists mig_migrations (
                     id bigint generated always as identity primary key,
                     migration varchar(317) not null,
                     executed_at timestamp with time zone default current_timestamp
@@ -37,9 +37,9 @@ SQL
 
     private function repeatableMigrationsTable(): void
     {
-        $statement = $this->db->pdo()->prepare(
+        $statement = $this->db->pdo->prepare(
             <<<SQL
-            create table IF not exists mig_repeatable_migrations (
+            create table if not exists mig_repeatable_migrations (
                 id bigint generated always as identity primary key,
                 migration varchar(304) not null unique,
                 checksum varchar(64) not null,

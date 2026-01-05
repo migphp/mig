@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Mig\Actions;
 
-use Mig\Support\Config;
+use Mig\Config;
 use RuntimeException;
 
 final readonly class CalculateRepeatableMigrationChecksum
 {
     public function execute(string $fileName): string
     {
-        $filePath = Config::repeatableMigrationsDirectoryPath().'/'.$fileName;
+        $filePath = sprintf("%s/%s", Config::instance()->repeatableMigrationsDirPath, $fileName);
         $content = file_get_contents($filePath);
 
         if ($content === false) {

@@ -2,13 +2,12 @@
 
 namespace Mig\Commands;
 
-use Mig\Actions\EnsureMigrationsTablesExists;
 use Mig\Actions\RetrievePendingMigrations;
 use Mig\Actions\RetrievePendingRepeatableMigrations;
 use Mig\Actions\RunMigration;
 use Mig\Actions\StoreMigrationExecuted;
 use Mig\Actions\StoreRepeatableMigrationExecuted;
-use Mig\Support\Config;
+use Mig\Config;
 use Mig\Support\Database;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -22,7 +21,7 @@ class MigrateCommand
 
     public function __construct()
     {
-        $this->db = Database::connect();
+        $this->db = Database::instance();
     }
 
     public function __invoke(InputInterface $i, OutputInterface $o): int
@@ -47,7 +46,7 @@ class MigrateCommand
         foreach ($pendingMigrations as $migrationName) {
             $o->writeln("Running migration $migrationName");
 
-            $migrationPath = sprintf("%s/%s", Config::migrationsDirectoryPath(), $migrationName);
+            $migrationPath = sprintf("%s/%s", Config::instance()->migrationsDirPath, $migrationName);
 
             [$success, $info] = new RunMigration()->execute($migrationPath);
 
@@ -73,7 +72,7 @@ class MigrateCommand
 
             $o->writeln("Running repeatable migration $migrationName");
 
-            $migrationPath = sprintf("%s/%s", Config::repeatableMigrationsDirectoryPath(), $migrationName);
+            $migrationPath = sprintf("%s/%s", Config::instance()->repeatableMigrationsDirPath, $migrationName);
 
             [$success, $info] = new RunMigration()->execute($migrationPath);
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mig\Actions;
 
-use Mig\Support\Config;
+use Mig\Config;
 use Mig\Support\Database;
 
 final readonly class RetrievePendingRepeatableMigrations
@@ -20,7 +20,7 @@ final readonly class RetrievePendingRepeatableMigrations
      */
     public function execute(): array
     {
-        $migrationsPath = Config::repeatableMigrationsDirectoryPath();
+        $migrationsPath = Config::instance()->repeatableMigrationsDirPath;
         $allMigrations = glob($migrationsPath.'/*.sql');
 
         if ($allMigrations === false || $allMigrations === []) {
@@ -29,7 +29,7 @@ final readonly class RetrievePendingRepeatableMigrations
 
         $allMigrations = array_map(fn($file) => basename($file), $allMigrations);
 
-        $statement = $this->db->pdo()->prepare('select migration as file_name, checksum from mig_repeatable_migrations');
+        $statement = $this->db->pdo->prepare('select migration as file_name, checksum from mig_repeatable_migrations');
         $statement->execute();
         $result = $statement->fetchAll();
 

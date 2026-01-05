@@ -12,7 +12,7 @@ final readonly class RunMigration
 
     public function __construct(
     ) {
-        $this->db = Database::connect();
+        $this->db = Database::instance();
     }
 
     /**
@@ -31,11 +31,11 @@ final readonly class RunMigration
             return [false, '🤨 Empty migration, skipping.'];
         }
 
-        $result = $this->db->pdo()->exec($sql);
+        $result = $this->db->pdo->exec($sql);
 
         if ($result === false) {
             // TODO: fix this ugliness
-            var_dump($this->db->pdo()->errorInfo());
+            var_dump($this->db->pdo->errorInfo());
             return [false, 'error: '];
         }
 
