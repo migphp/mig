@@ -13,7 +13,11 @@ final readonly class CalculateRepeatableMigrationChecksum
     {
         $filePath = sprintf('%s/%s', Config::instance()->completeRepeatableMigrationsPath, $fileName);
 
-        $content = file_get_contents($filePath);
+        if (! file_exists($filePath)) {
+            throw new RuntimeException("Unable to read file $filePath");
+        }
+
+        $content = @file_get_contents($filePath);
 
         if ($content === false) {
             throw new RuntimeException("Unable to read file $filePath");

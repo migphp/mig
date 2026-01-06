@@ -2,7 +2,10 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd"
     colors="true"
-    cacheDirectory=".phpunit.cache">
+    cacheDirectory=".phpunit.cache"
+    beStrictAboutOutputDuringTests="true"
+    failOnWarning="false"
+    failOnRisky="false">
     <source>
         <include>
             <directory suffix=".php">./src</directory>
