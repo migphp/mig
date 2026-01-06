@@ -16,11 +16,11 @@ $dotenv->load();
 new EnsureMigrationsDirectoriesExists()->execute();
 new EnsureMigrationsTablesExists()->execute();
 
-$application = new Application();
+$application = new Application;
 
 $application->addCommands([
-    new CreateMigrationCommand(),
-    new MigrateCommand(),
+    new CreateMigrationCommand,
+    new MigrateCommand,
 ]);
 
 $application->run();
