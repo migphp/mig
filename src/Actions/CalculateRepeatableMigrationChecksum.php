@@ -11,7 +11,8 @@ final readonly class CalculateRepeatableMigrationChecksum
 {
     public function execute(string $fileName): string
     {
-        $filePath = sprintf('%s/%s', Config::instance()->repeatableMigrationsDirPath, $fileName);
+        $filePath = sprintf('%s/%s', Config::instance()->completeRepeatableMigrationsPath, $fileName);
+
         $content = file_get_contents($filePath);
 
         if ($content === false) {

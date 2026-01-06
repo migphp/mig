@@ -35,8 +35,8 @@ readonly class CreateMigrationCommand
         $config = Config::instance();
 
         $filePath = match ($isRepeatable) {
-            false => sprintf('%s/%s_%s', $config->migrationsDirPath, $this->generatePrefix(), $fileName),
-            true => sprintf('%s/%s', $config->repeatableMigrationsDirPath, $fileName),
+            false => sprintf('%s/%s_%s', $config->completeMigrationsPath, $this->generatePrefix(), $fileName),
+            true => sprintf('%s/%s', $config->completeRepeatableMigrationsPath, $fileName),
         };
 
         touch($filePath);

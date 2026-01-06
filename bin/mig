@@ -7,11 +7,7 @@ use Mig\Actions\EnsureMigrationsDirectoriesExists;
 use Mig\Actions\EnsureMigrationsTablesExists;
 use Mig\Commands\CreateMigrationCommand;
 use Mig\Commands\MigrateCommand;
-use Mig\Support\ProjectPath;
 use Symfony\Component\Console\Application;
-
-$dotenv = Dotenv\Dotenv::createImmutable(ProjectPath::get());
-$dotenv->load();
 
 new EnsureMigrationsDirectoriesExists()->execute();
 new EnsureMigrationsTablesExists()->execute();

@@ -6,29 +6,28 @@ namespace Mig;
 
 use Mig\Support\ProjectPath;
 use Mig\ValueObjects\DatabaseConfig;
-use Symfony\Component\VarDumper\Cloner\Data;
 
 final class Config
 {
-    public string $migrationsDirPath;
+    public string $completeMigrationsPath;
 
-    public string $repeatableMigrationsDirPath;
+    public string $completeRepeatableMigrationsPath;
 
     private const string JSON_CONFIGURATION_NAME = 'mig.json';
 
     private static ?self $instance = null;
 
     public function __construct(
-        public string $migrationsRelativeDirPath,
+        public string $migrationsPath,
         public DatabaseConfig $dbConfig,
     ) {
         $projectPath = ProjectPath::get();
-        $this->migrationsDirPath = $projectPath.DIRECTORY_SEPARATOR.'migrations';
-        $this->repeatableMigrationsDirPath = $this->migrationsDirPath.DIRECTORY_SEPARATOR.'repeatable';
+        $this->completeMigrationsPath = $projectPath.DIRECTORY_SEPARATOR.$migrationsPath;
+        $this->completeRepeatableMigrationsPath = $this->completeMigrationsPath.DIRECTORY_SEPARATOR.'repeatable';
     }
 
     public static function instance(
-        ?string $overrideMigrationsRelativeDirPath = null,
+        ?string $overrideMigrationsPath = null,
         ?DatabaseConfig $overrideDbConfig = null,
     ): self {
         if (self::$instance instanceof self) {
@@ -49,9 +48,13 @@ final class Config
         $jsonAsArray = json_decode($contents, true) ?: [];
 
         return self::$instance = new self(
-            migrationsRelativeDirPath: $overrideMigrationsRelativeDirPath ?? $jsonAsArray['migrationsDir'] ?? 'migrations',
+            migrationsPath: $overrideMigrationsPath ?? $jsonAsArray['migrationsDir'] ?? 'migrations',
             dbConfig: $overrideDbConfig ?? DatabaseConfig::fromEnvironment(),
         );
     }
 
+    public function discard(): void
+    {
+        self::$instance = null;
+    }
 }

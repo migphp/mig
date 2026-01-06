@@ -20,7 +20,7 @@ final readonly class RetrievePendingRepeatableMigrations
      */
     public function execute(): array
     {
-        $migrationsPath = Config::instance()->repeatableMigrationsDirPath;
+        $migrationsPath = Config::instance()->completeRepeatableMigrationsPath;
         $allMigrations = glob($migrationsPath.'/*.sql');
 
         if ($allMigrations === false || $allMigrations === []) {

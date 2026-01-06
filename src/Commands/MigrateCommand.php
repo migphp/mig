@@ -46,7 +46,7 @@ class MigrateCommand
         foreach ($pendingMigrations as $migrationName) {
             $o->writeln("Running migration $migrationName");
 
-            $migrationPath = sprintf('%s/%s', Config::instance()->migrationsDirPath, $migrationName);
+            $migrationPath = sprintf('%s/%s', Config::instance()->completeMigrationsPath, $migrationName);
 
             [$success, $info] = new RunMigration()->execute($migrationPath);
 
@@ -72,7 +72,7 @@ class MigrateCommand
 
             $o->writeln("Running repeatable migration $migrationName");
 
-            $migrationPath = sprintf('%s/%s', Config::instance()->repeatableMigrationsDirPath, $migrationName);
+            $migrationPath = sprintf('%s/%s', Config::instance()->completeRepeatableMigrationsPath, $migrationName);
 
             [$success, $info] = new RunMigration()->execute($migrationPath);
 

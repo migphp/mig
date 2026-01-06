@@ -20,7 +20,7 @@ final readonly class RetrievePendingMigrations
      */
     public function execute(): array
     {
-        $migrationsPath = Config::instance()->migrationsDirPath;
+        $migrationsPath = Config::instance()->completeMigrationsPath;
         $allFiles = glob($migrationsPath.'/*.sql');
         $fileNames = array_map(fn ($file) => basename($file), $allFiles);
 

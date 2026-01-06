@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Mig\ValueObjects;
 
+use Dotenv\Dotenv;
+use Mig\Support\ProjectPath;
+
 final readonly class DatabaseConfig
 {
     public function __construct(
@@ -18,6 +21,9 @@ final readonly class DatabaseConfig
 
     public static function fromEnvironment(): self
     {
+        $dotenv = Dotenv::createImmutable(ProjectPath::get());
+        $dotenv->load();
+
         $databaseUrl = $_ENV['DB_URL'] ?? null;
 
         if ($databaseUrl) {

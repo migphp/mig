@@ -10,8 +10,8 @@ class EnsureMigrationsDirectoriesExists
     {
         $config = Config::instance();
 
-        $this->ensureDirectoryExists($config->migrationsDirPath);
-        $this->ensureDirectoryExists($config->repeatableMigrationsDirPath);
+        $this->ensureDirectoryExists($config->completeMigrationsPath);
+        $this->ensureDirectoryExists($config->completeRepeatableMigrationsPath);
     }
 
     private function ensureDirectoryExists(string $path): void
