@@ -35,14 +35,14 @@ readonly class CreateMigrationCommand
         $config = Config::instance();
 
         $filePath = match ($isRepeatable) {
-            false => sprintf("%s/%s_%s", $config->migrationsDirPath, $this->generatePrefix(), $fileName),
-            true => sprintf("%s/%s", $config->repeatableMigrationsDirPath, $fileName),
+            false => sprintf('%s/%s_%s', $config->migrationsDirPath, $this->generatePrefix(), $fileName),
+            true => sprintf('%s/%s', $config->repeatableMigrationsDirPath, $fileName),
         };
 
         touch($filePath);
 
         $o->writeln("$filePath");
-        $o->writeln("✅ created successfully");
+        $o->writeln('✅ created successfully');
 
         return Command::SUCCESS;
     }
@@ -62,7 +62,7 @@ readonly class CreateMigrationCommand
     private function generatePrefix(): string
     {
         $today = new DateTime()->format('ymd');
-        $seconds = time() - strtotime("today");
+        $seconds = time() - strtotime('today');
 
         return $today.sprintf('%06d', $seconds);
     }

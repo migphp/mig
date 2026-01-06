@@ -36,17 +36,17 @@ class MigrateCommand
 
     private function runMigrations(OutputInterface $o): void
     {
-        $storeMigration = new StoreMigrationExecuted();
+        $storeMigration = new StoreMigrationExecuted;
         $pendingMigrations = new RetrievePendingMigrations($this->db)->execute();
 
         if (count($pendingMigrations) === 0) {
-            $o->writeln("☑️ No pending migrations...");
+            $o->writeln('☑️ No pending migrations...');
         }
 
         foreach ($pendingMigrations as $migrationName) {
             $o->writeln("Running migration $migrationName");
 
-            $migrationPath = sprintf("%s/%s", Config::instance()->migrationsDirPath, $migrationName);
+            $migrationPath = sprintf('%s/%s', Config::instance()->migrationsDirPath, $migrationName);
 
             [$success, $info] = new RunMigration()->execute($migrationPath);
 
@@ -60,11 +60,11 @@ class MigrateCommand
 
     private function runRepeatableMigrations(OutputInterface $o): void
     {
-        $storeMigration = new StoreRepeatableMigrationExecuted();
+        $storeMigration = new StoreRepeatableMigrationExecuted;
         $pendingMigrations = new RetrievePendingRepeatableMigrations($this->db)->execute();
 
         if (count($pendingMigrations) === 0) {
-            $o->writeln("☑️ No pending repeatable migrations...");
+            $o->writeln('☑️ No pending repeatable migrations...');
 
         }
 
@@ -72,7 +72,7 @@ class MigrateCommand
 
             $o->writeln("Running repeatable migration $migrationName");
 
-            $migrationPath = sprintf("%s/%s", Config::instance()->repeatableMigrationsDirPath, $migrationName);
+            $migrationPath = sprintf('%s/%s', Config::instance()->repeatableMigrationsDirPath, $migrationName);
 
             [$success, $info] = new RunMigration()->execute($migrationPath);
 

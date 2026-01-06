@@ -16,7 +16,7 @@ final readonly class StoreRepeatableMigrationExecuted
     public function execute(string $fileName): void
     {
         $checksum = new CalculateRepeatableMigrationChecksum()->execute($fileName);
-        $statement = $this->db->pdo->prepare(<<<SQL
+        $statement = $this->db->pdo->prepare(<<<'SQL'
             insert into mig_repeatable_migrations (migration, checksum) values (?, ?)
             on conflict (migration) do update set checksum = ?;
 SQL

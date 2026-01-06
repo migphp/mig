@@ -1,0 +1,6 @@
+{
+    "exclude": [
+        "postgresql",
+        "migrations"
+    ]
+}

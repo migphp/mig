@@ -27,7 +27,7 @@ final readonly class RetrievePendingRepeatableMigrations
             return [];
         }
 
-        $allMigrations = array_map(fn($file) => basename($file), $allMigrations);
+        $allMigrations = array_map(fn ($file) => basename($file), $allMigrations);
 
         $statement = $this->db->pdo->prepare('select migration as file_name, checksum from mig_repeatable_migrations');
         $statement->execute();
@@ -43,6 +43,7 @@ final readonly class RetrievePendingRepeatableMigrations
                     return false;
                 }
             }
+
             return true;
         });
 

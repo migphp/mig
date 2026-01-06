@@ -6,9 +6,12 @@ namespace Mig;
 
 use Mig\Support\ProjectPath;
 use Mig\ValueObjects\DatabaseConfig;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 final class Config
 {
+    public string $migrationsDirPath;
+
     public string $repeatableMigrationsDirPath;
 
     private const string JSON_CONFIGURATION_NAME = 'mig.json';
@@ -16,52 +19,39 @@ final class Config
     private static ?self $instance = null;
 
     public function __construct(
-        public string $migrationsDirPath,
+        public string $migrationsRelativeDirPath,
         public DatabaseConfig $dbConfig,
     ) {
-        $this->repeatableMigrationsDirPath = sprintf(
-            "%s%s%s",
-            $this->migrationsDirPath,
-            DIRECTORY_SEPARATOR,
-            self::JSON_CONFIGURATION_NAME,
-        );
+        $projectPath = ProjectPath::get();
+        $this->migrationsDirPath = $projectPath.DIRECTORY_SEPARATOR.'migrations';
+        $this->repeatableMigrationsDirPath = $this->migrationsDirPath.DIRECTORY_SEPARATOR.'repeatable';
     }
 
-    public static function instance(): self
-    {
+    public static function instance(
+        ?string $overrideMigrationsRelativeDirPath = null,
+        ?DatabaseConfig $overrideDbConfig = null,
+    ): self {
         if (self::$instance instanceof self) {
             return self::$instance;
         }
 
-        $filePath = ProjectPath::get().DIRECTORY_SEPARATOR.self::JSON_CONFIGURATION_NAME;
+        $configFilePath = ProjectPath::get().DIRECTORY_SEPARATOR.self::JSON_CONFIGURATION_NAME;
 
-        $contents = file_exists($filePath)
-            ? (string) file_get_contents($filePath)
+        $contents = file_exists($configFilePath)
+            ? (string) file_get_contents($configFilePath)
             : '{}';
 
         /**
          * @var array{
          *     migrationsDir?: string,
-         *     database?: array{
-         *         host: string,
-         *         port: integer,
-         *         name: string,
-         *         username: string,
-         *         password: string
-         *     }
          *  } $jsonAsArray
          */
         $jsonAsArray = json_decode($contents, true) ?: [];
 
         return self::$instance = new self(
-            migrationsDirPath: $jsonAsArray['migrationsDir'] ?? "migrations",
-            dbConfig: new DatabaseConfig(
-                host: $jsonAsArray['database']['host'] ?? "localhost",
-                port: $jsonAsArray['database']['port'] ?? 5432,
-                database: $jsonAsArray['database']['name'] ?? "postgres",
-                username: $jsonAsArray['database']['username'] ?? "postgres",
-                password: $jsonAsArray['database']['password'] ?? "postgres",
-            )
+            migrationsRelativeDirPath: $overrideMigrationsRelativeDirPath ?? $jsonAsArray['migrationsDir'] ?? 'migrations',
+            dbConfig: $overrideDbConfig ?? DatabaseConfig::fromEnvironment(),
         );
     }
+
 }

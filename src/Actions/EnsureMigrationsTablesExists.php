@@ -24,7 +24,7 @@ final readonly class EnsureMigrationsTablesExists
     private function migrationsTable(): void
     {
         $statement = $this->db->pdo->prepare(
-            <<<SQL
+            <<<'SQL'
                 create table if not exists mig_migrations (
                     id bigint generated always as identity primary key,
                     migration varchar(317) not null,
@@ -38,7 +38,7 @@ SQL
     private function repeatableMigrationsTable(): void
     {
         $statement = $this->db->pdo->prepare(
-            <<<SQL
+            <<<'SQL'
             create table if not exists mig_repeatable_migrations (
                 id bigint generated always as identity primary key,
                 migration varchar(304) not null unique,

@@ -16,7 +16,7 @@ class EnsureMigrationsDirectoriesExists
 
     private function ensureDirectoryExists(string $path): void
     {
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             mkdir($path, 0777, true);
         }
     }

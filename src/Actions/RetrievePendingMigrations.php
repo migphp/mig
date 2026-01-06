@@ -22,7 +22,7 @@ final readonly class RetrievePendingMigrations
     {
         $migrationsPath = Config::instance()->migrationsDirPath;
         $allFiles = glob($migrationsPath.'/*.sql');
-        $fileNames = array_map(fn($file) => basename($file), $allFiles);
+        $fileNames = array_map(fn ($file) => basename($file), $allFiles);
 
         if ($allFiles === false || $allFiles === []) {
             return [];

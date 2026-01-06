@@ -20,8 +20,7 @@ final readonly class RunMigration
      */
     public function execute(
         string $filePath,
-    ): array
-    {
+    ): array {
         $sql = file_get_contents($filePath);
         if ($sql === false) {
             return [false, "fail to read file $filePath"];
@@ -36,6 +35,7 @@ final readonly class RunMigration
         if ($result === false) {
             // TODO: fix this ugliness
             var_dump($this->db->pdo->errorInfo());
+
             return [false, 'error: '];
         }
 
