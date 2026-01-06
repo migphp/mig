@@ -53,7 +53,7 @@ final class Config
         );
     }
 
-    public function discard(): void
+    public static function reset(): void
     {
         self::$instance = null;
     }
