@@ -5,10 +5,10 @@ declare(strict_types=1);
 use Mig\Actions\EnsureMigrationsTablesExists;
 use Mig\Config;
 use Mig\Database;
+use Mig\ValueObjects\DatabaseConfig;
 
 beforeEach(function (): void {
     Config::reset();
-
     $db = Database::instance();
     $db->pdo->exec('drop table if exists mig_migrations');
     $db->pdo->exec('drop table if exists mig_repeatable_migrations');

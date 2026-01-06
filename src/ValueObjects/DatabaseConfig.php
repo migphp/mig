@@ -39,11 +39,11 @@ final readonly class DatabaseConfig
         }
 
         return new self(
-            host: $_ENV['DB_HOST'],
-            port: (int) $_ENV['DB_PORT'],
-            database: $_ENV['DB_DATABASE'],
-            username: $_ENV['DB_USERNAME'],
-            password: $_ENV['DB_PASSWORD'],
+            host: $_ENV['DB_HOST'] ?? 'localhost',
+            port: (int) ($_ENV['DB_PORT'] ?? 5432),
+            database: $_ENV['DB_DATABASE'] ?? 'postgres',
+            username: $_ENV['DB_USERNAME'] ?? 'postgres',
+            password: $_ENV['DB_PASSWORD'] ?? 'postgres',
         );
     }
 }
